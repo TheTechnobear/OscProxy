@@ -1,0 +1,6 @@
+/Users/kodiak/Projects/OscProxy/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/kodiak/Projects/OscProxy/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/kodiak/Projects/OscProxy/cmake-build-debug/CMakeFiles/OscProxy.dir
+/Users/kodiak/Projects/OscProxy/cmake-build-debug/oscpack/CMakeFiles/rebuild_cache.dir
+/Users/kodiak/Projects/OscProxy/cmake-build-debug/oscpack/CMakeFiles/edit_cache.dir
+/Users/kodiak/Projects/OscProxy/cmake-build-debug/oscpack/CMakeFiles/oscpack.dir
