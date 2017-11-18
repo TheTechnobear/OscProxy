@@ -1,0 +1,38 @@
+OscProxy
+
+this allows the Organelle to be used as 'Controller' for applications running on another machine
+
+an example would be:
+
+developing a pure patch on your macOS for the Organelle
+so you run Pure Data on your Mac, and this OscProxy client
+
+on the Organelle you run the OscHost
+
+now your Organelle can control your patch running on your Mac
+
+
+Note: This is a 'development tool'
+
+
+Installing
+
+Organelle
+---------
+put OscHost onto the Usbdrive in System (create if required)
+e.g.
+/usbdrive/System/OscHost
+
+you will need to edit the run.sh to insert your IP address of your PC/Mac
+(eg /usbdrive/System/OscHost/run.sh )
+
+then run OscHost on the Organelle... its like a 'patch'
+
+Client
+---------
+put 'Clients' anywhere you want
+then run either run_linux.sh or run_macos.sh
+
+note: this assumes organelle's host name can be resolved with 'organelle'
+if not you will want to edit the appropriate run script to put the ip address
+
