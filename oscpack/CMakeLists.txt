@@ -10,7 +10,7 @@ else (WIN32)
     set(IpSystemTypePath ip/posix)
 endif (WIN32)
 
-add_library(oscpack SHARED
+add_library(oscpack
 
         ip/IpEndpointName.h
         ip/IpEndpointName.cpp
@@ -44,6 +44,7 @@ target_include_directories(oscpack PUBLIC ip)
 target_include_directories(oscpack PUBLIC zeroconf)
 target_include_directories(oscpack PRIVATE .)
 
+target_link_libraries(oscpack ${LIBS})
 if (MSVC)
     # Force to always compile with W4
     if (CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
