@@ -1,21 +1,26 @@
 OscProxy
+=================
 
-this allows the Organelle to be used as 'Controller' for applications running on another machine
+this allows the Organelle to be used as ‘Controller’ for applications (e.g. PD patches) running on another machine (e.g. your Desktop)
 
-an example would be:
+so if your developing a pure data patch for Organelle on your Desktop, this utility will allows you to control that patch (running on your Desktop) from your Organelle. so knobs/keys events are received by patch , and your organelle oled will update from the screen events of your patch
 
-developing a pure patch on your macOS for the Organelle
-so you run Pure Data on your Mac, and this OscProxy client
+Note: Its not limited to PD, it also works for OTC :)
 
-on the Organelle you run the OscHost
+2 parts :
+OscHost – runs on the Organelle
+Clients for Mac/Windows/Linux run on your Desktop
 
-now your Organelle can control your patch running on your Mac
+Requirements:
+Organelle + Wifi card
+Organelle setup for Wifi
+Desktop computer on same network as Organelle
+
+Note: This is a ‘development tool’, so will need 'tweaking' to your setup, see below
 
 
-Note: This is a 'development tool'
-
-
-Installing
+Installation
+=================================
 
 Organelle
 ---------
@@ -31,8 +36,8 @@ then run OscHost on the Organelle... its like a 'patch'
 Client
 ---------
 put 'Clients' anywhere you want
-then run either run_linux.sh or run_macos.sh
+then run either run_linux.sh, run_macos.sh or run_windows.cmd
 
 note: this assumes organelle's host name can be resolved with 'organelle'
-if not you will want to edit the appropriate run script to put the ip address
+if not you will want to edit the appropriate run script to put the ip address of your Organelle
 
