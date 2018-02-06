@@ -12,16 +12,38 @@
 class ProxyListener : public osc::OscPacketListener {
 public:
 
-    ProxyListener(UdpTransmitSocket &proxy) : proxy_(proxy) { ; }
+    ProxyListener(const std::string &host, unsigned port)
+            : host_(host), port_(port) {
+        buffer_[0] = 0;
+        if (host.length() > 0) {
+            connect(host, port);
+        }
+    }
 
 protected:
+    void connect(const std::string &host, unsigned port) {
+        std::cout << "connect " << host << ":" << port << std::endl;
+        proxy_ = std::make_shared<UdpTransmitSocket>(IpEndpointName(host.c_str(), port));
+    }
 
-    virtual void ProcessMessage(const osc::ReceivedMessage &m,
-                                const IpEndpointName &remoteEndpoint) {
+    void ProcessMessage(const osc::ReceivedMessage &m,
+                        const IpEndpointName &remoteEndpoint) override {
         (void) remoteEndpoint; // suppress unused parameter warning
 
         try {
-            osc::OutboundPacketStream p(buffer, OUTPUT_BUFFER_SIZE);
+            if (!proxy_) {
+                char host[128];
+                remoteEndpoint.AddressAsString(host);
+                std::cout << "connect from: " << host << std::endl;
+                if (remoteEndpoint.address == IpEndpointName("gato").address) {
+                    std::cout << "localhost" << std::endl;
+                } else {
+                    host_=host;
+                    connect(host_,port_);
+                }
+            }
+            if(!proxy_ || !proxy_->IsBound()) return;
+            osc::OutboundPacketStream p(buffer_, OUTPUT_BUFFER_SIZE);
 
 //            p << osc::BeginBundleImmediate;
             p << osc::BeginMessage(m.AddressPattern());
@@ -45,6 +67,8 @@ protected:
                         break;
                     };
 
+                    default:
+                        break;
                 }
                 arg++;
             }
@@ -54,7 +78,7 @@ protected:
 //            p << osc::EndBundle;
 
 
-            proxy_.Send(p.Data(), p.Size());
+            proxy_->Send(p.Data(), p.Size());
         } catch (osc::Exception &e) {
             // any parsing errors such as unexpected argument types, or
             // missing arguments get thrown as exceptions.
@@ -65,20 +89,27 @@ protected:
 
     }
 
-    char buffer[OUTPUT_BUFFER_SIZE];
-    UdpTransmitSocket &proxy_;
+    std::shared_ptr<UdpTransmitSocket> proxy_;
+    std::string host_;
+    unsigned port_;
+    char buffer_[OUTPUT_BUFFER_SIZE]{};
 };
 
 int main(int argc, char *argv[]) {
     (void) argc; // suppress unused parameter warnings
     (void) argv; // suppress unused parameter warnings
-    if (argc < 4) {
-        std::cerr << "OscProxy listenport proxyhost proxyport" << std::endl;
+    if (argc < 2) {
+        std::cerr << "OscProxy listenport [proxyhost proxyport]" << std::endl;
         return -1;
     }
-    unsigned listenport = (unsigned) std::atoi(argv[1]);
-    std::string proxyhost = argv[2];
-    unsigned proxyport = (unsigned) std::atoi(argv[3]);
+    char *endp;
+    auto listenport = (unsigned) std::strtol(argv[1], &endp, 10);
+
+    std::string proxyhost;
+    if (argc > 2) proxyhost = argv[2];
+
+    unsigned proxyport = listenport;
+    if (argc > 3) proxyport =  (unsigned) std::strtol(argv[3], &endp, 10);
 
     if (listenport == 0) {
         std::cerr << "invalid listenport" << std::endl;
@@ -89,12 +120,12 @@ int main(int argc, char *argv[]) {
         std::cerr << "invalid proxyport" << std::endl;
         return -1;
     }
-    UdpTransmitSocket proxy(IpEndpointName(proxyhost.c_str(), proxyport));
 
-    ProxyListener listener(proxy);
+    ProxyListener listener(proxyhost, proxyport);
+
     UdpListeningReceiveSocket s(
-        IpEndpointName(IpEndpointName::ANY_ADDRESS, listenport),
-        &listener);
+            IpEndpointName(IpEndpointName::ANY_ADDRESS, listenport),
+            &listener);
 
     std::cout << "press ctrl-c to end" << std::endl;
 

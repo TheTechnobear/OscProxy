@@ -13,9 +13,7 @@ export DIR=`dirname $0`
 echo $DIR
 cd $DIR
 
-killall pd
-killall python2
-killall OscProxy
+~/scripts/killpatch.sh
 
 oscsend localhost 4001 /oled/clear i 1
 oscsend localhost 4001 /oled/line/1 s "running OscProxy"
@@ -25,6 +23,6 @@ oscsend localhost 4001 /oled/line/4 s " "
 oscsend localhost 4001 /oled/line/5 s " "
 oscsend localhost 4001 /oled/setscreen i 3
 
-./OscProxy 4000 192.168.1.58 4000 &
+./OscProxy 4000 &
 
 
