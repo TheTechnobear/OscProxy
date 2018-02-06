@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 
 #include "oscpack/osc/OscReceivedElements.h"
 #include "oscpack/osc/OscPacketListener.h"
@@ -34,9 +35,8 @@ protected:
             if (!proxy_) {
                 char host[128];
                 remoteEndpoint.AddressAsString(host);
-                std::cout << "connect from: " << host << std::endl;
-                if (remoteEndpoint.address == IpEndpointName("gato").address) {
-                    std::cout << "localhost" << std::endl;
+                if (remoteEndpoint.address == IpEndpointName("localhost").address) {
+                    ;
                 } else {
                     host_=host;
                     connect(host_,port_);
